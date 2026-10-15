@@ -1,4 +1,4 @@
-# nvim-cangjie
+# cangjie.nvim
 
 Tree-sitter syntax highlighting for [Cangjie](https://cangjie-lang.cn/) in Neovim,
 adapted from [CJPLUK/zed-cangjie](https://github.com/CJPLUK/zed-cangjie).
@@ -21,14 +21,32 @@ not required.
 
 ## Install
 
-### lazy.nvim (local checkout)
+### vim.pack (Neovim 0.12+)
 
-Add this to your plugin specifications, adjusting `dir` to this checkout:
+Add this to your `init.lua`, after any existing `nvim-treesitter` configuration:
+
+```lua
+vim.pack.add({
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+  { src = "https://github.com/CJPLUK/cangjie.nvim" },
+})
+
+-- Register the parser before installing: plugin/ files load after init.lua.
+require("cangjie").setup()
+require("nvim-treesitter").install({ "cangjie" }):wait(300000)
+```
+
+Restart Neovim and open a `.cj` file. The final line installs the parser if
+needed and waits up to five minutes, so highlighting is ready for the first
+buffer. Subsequent launches skip installation when the parser is already present.
+
+### lazy.nvim
+
+Add this to your plugin specifications:
 
 ```lua
 {
-  dir = vim.fn.expand("~/Documents/repos/nvim-cangjie"),
-  name = "nvim-cangjie",
+  "CJPLUK/cangjie.nvim",
   lazy = false,
   dependencies = {
     {
@@ -47,14 +65,14 @@ Restart Neovim, then run:
 :TSInstall cangjie
 ```
 
-Wait for installation to finish and open (or reopen) a `.cj` file. No `setup()`
-call or separate highlighting configuration is needed. `cjpm.toml` uses
-Neovim's normal TOML support.
+Wait for installation to finish and open (or reopen) a `.cj` file. Highlighting
+starts automatically. `cjpm.toml` uses Neovim's normal TOML support.
 
 ### Other plugin managers / native packages
 
-Add this directory to `runtimepath`, or place it under
-`stdpath('data')/site/pack/plugins/start/nvim-cangjie`. Load `nvim-treesitter`
+Install [`CJPLUK/cangjie.nvim`](https://github.com/CJPLUK/cangjie.nvim) with your
+plugin manager, or clone it into
+`stdpath('data')/site/pack/plugins/start/cangjie.nvim`. Load `nvim-treesitter`
 at startup as well, then run `:TSInstall cangjie`.
 
 If installing parsers from your configuration before startup plugins are sourced,
